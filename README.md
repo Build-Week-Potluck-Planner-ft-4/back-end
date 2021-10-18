@@ -1,3 +1,106 @@
+Backend Project for ft-potluck-planner-4
+Deployed Link is https://potluckplanner-bw-10-2021.herokuapp.com/
+
+- [Auth](#auth)
+	- [Logs a User In](#logs-a-user-in)
+	- [Registers a New User](#registers-a-new-user)
+
+# Auth
+
+## Logs a User In
+
+<p>Logs a User In</p>
+
+	POST /api/auth/login
+
+
+### Parameters
+
+| Name    | Type      | Description                          |
+|---------|-----------|--------------------------------------|
+| username			| String			|  <p>Username of the User</p>							|
+| password			| String			|  <p>Password of the User</p>							|
+
+### Success Response
+
+Success-Response:
+
+```
+{
+    "message": "welcome, pop",
+    "status": 200,
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InBvcCIsImlhdCI6MTYzNDU5MjIzOSwiZXhwIjoxNjM0Njc4NjM5fQ.RyKXp7JDBXS-fUNboBRH9lVje76Nnj43haMA7MJmbCI"
+}
+
+```
+### Error Response
+
+Username-Or-Password-Incorrect-Response
+
+```
+{
+     "message": "invalid credentials."
+}
+```
+
+## Registers a New User
+
+<p>Registers a New User</p>
+
+	POST /api/auth/register
+
+
+### Parameters
+
+| Name    | Type      | Description                          |
+|---------|-----------|--------------------------------------|
+| username			| String			|  <p>The New Users username *Required **Must be unique</p>							|
+| password			| String			|  <p>The New Users password *Required</p>							|
+| email			| String			|  <p>The New Users email, *Required **Must be unique</p>							|
+
+
+### Success Response
+
+Success-Response:
+
+```
+{
+    "email": "pop@gmail.com",
+    "password": "$2a$08$p26QggJQ5csnD8qPCYKMxeY/DQlKHAIPB9xO7sgBs8mjFTwQyBWCu",
+    "user_id": 20,
+    "username": "pop"
+}
+```
+### Error Response
+
+Username-Already-Taken
+
+```
+{
+     "message": "username taken"
+}
+```
+
+Required Field(s) empty
+
+```
+{
+    "message": "username, email, and password required"
+}
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
 # Build Week Scaffolding for Node and PostgreSQL
 
 ## Video Tutorial
