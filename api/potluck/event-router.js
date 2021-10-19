@@ -25,7 +25,7 @@ router.post('/create/:user_id', validateUserId, validateBody, async (req, res, n
     }
 })
 
-router.post('/items/:potluck_id', validatePlId, validateItem, async (req, res, next) => {
+router.post('/items/:user_id/:potluck_id', validatePlId, validateItem, async (req, res, next) => {
     const { item } = req.body
     const { potluck_id } = req.potluck
     const newItem = {

@@ -48,12 +48,20 @@ const validateUserId = async (req, res, next) => {
 }
 
 const validatePlId = async (req, res, next) => {
-    const { potluck_id } = req.params
+    const { potluck_id, user_id } = req.params 
     try {
         const potluck = await Events.getById(potluck_id)
         if(potluck) {
             req.potluck = potluck
-            next()
+            console.log(potluck.user_id, user_id)
+            if(potluck.user_id === parseInt(user_id)) {
+                next()
+            } else {
+                next({
+                    status: 401,
+                    message: "user is not organizer of event"
+                })
+            }
         } else {
             next({
                 status: 404,
