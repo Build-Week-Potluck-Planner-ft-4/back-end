@@ -3,10 +3,11 @@ const Events = require('./event-model')
 const {
     validateBody,
     validateItem,
-    validateId
+    validatePlId,
+    validateUserId
 } = require('../middleware/potluck')
 
-router.post('/create/:user_id', validateBody, async (req, res, next) => {
+router.post('/create/:user_id', validateUserId, validateBody, async (req, res, next) => {
     const { potluck_name, date, time, location } = req.body
     const { user_id } = req.params
     const newEvent = { 
@@ -24,7 +25,7 @@ router.post('/create/:user_id', validateBody, async (req, res, next) => {
     }
 })
 
-router.post('/items/:potluck_id', validateId, validateItem, async (req, res, next) => {
+router.post('/items/:potluck_id', validatePlId, validateItem, async (req, res, next) => {
     const { item } = req.body
     const { id } = req.potluck
     try {
@@ -40,7 +41,9 @@ module.exports = router
 
 //[PUT] edit event
 
-//[PUT] add food items
+//[POST] add food items
+
+//[POST] add user/guests
 
 //[PUT] assign food items to user
 

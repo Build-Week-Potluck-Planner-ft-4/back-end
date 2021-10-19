@@ -8,11 +8,13 @@ async function insertEvent(event) {
     return newEventObject 
 }
 
-async function getById(id) {
+function getById(id) {
     return db('potluck')
         .where({ id })
         .first()
 }
+
+function addItem(id, item)
 
 module.exports = {
     insertEvent,
