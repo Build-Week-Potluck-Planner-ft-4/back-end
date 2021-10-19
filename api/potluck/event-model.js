@@ -10,13 +10,20 @@ async function insertEvent(event) {
 
 function getById(id) {
     return db('potluck')
-        .where({ id })
+        .where('potluck_id', id)
         .first()
 }
 
-function addItem(id, item)
+async function insertItem(newItem) {
+    const [newItemObject] = await db('potluckItem')
+        .insert(newItem, [
+            'item_id', 'potluck_id', 'item'
+        ])
+        return newItemObject
+}
 
 module.exports = {
     insertEvent,
-    getById
+    getById,
+    insertItem
 }

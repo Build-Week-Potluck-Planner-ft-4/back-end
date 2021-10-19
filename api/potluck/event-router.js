@@ -9,7 +9,7 @@ const {
 
 router.post('/create/:user_id', validateUserId, validateBody, async (req, res, next) => {
     const { potluck_name, date, time, location } = req.body
-    const { user_id } = req.params
+    const { user_id } = req.user
     const newEvent = { 
         potluck_name, 
         user_id,
@@ -27,10 +27,14 @@ router.post('/create/:user_id', validateUserId, validateBody, async (req, res, n
 
 router.post('/items/:potluck_id', validatePlId, validateItem, async (req, res, next) => {
     const { item } = req.body
-    const { id } = req.potluck
+    const { potluck_id } = req.potluck
+    const newItem = {
+        potluck_id,
+        item,
+    }
     try {
-        const newItem = await Events.addItem(id, item)
-        res.status(200).json(newItem)
+        const createdItem = await Events.insertItem(newItem)
+        res.status(200).json(createdItem)
     } catch (error) {
         next(error)
     }

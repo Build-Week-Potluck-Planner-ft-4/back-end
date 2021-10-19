@@ -36,12 +36,14 @@ const validateUserId = async (req, res, next) => {
         if(user) {
             req.user = user
             next()
+        } else {
+            next({
+                status: 404,
+                message: "User not found"
+            })
         }
     } catch (error) {
-        next({
-            status: 404,
-            message: "User not found"
-        })
+        next(error)
     }
 }
 
