@@ -6,13 +6,20 @@ async function insertUser(user) {
     return newUserObject // { user_id: 7, username: 'foo', password: 'xxxxxxx' }
   }
 
-  async function findBy(filter) {
+  function findBy(filter) {
       return db('users')
         .select('username', 'email', 'password')
         .where(filter)
   }
 
+  function getById(id) {
+    return db('users')
+      .where({ id })
+      .first()
+  }
+
   module.exports = {
       insertUser,
-      findBy
+      findBy,
+      getById
   }

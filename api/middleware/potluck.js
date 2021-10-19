@@ -1,4 +1,5 @@
 const Events = require('../potluck/event-model')
+const Users = require('../auth/auth-model')
 
 const validateBody = (req, res, next) => {
     const { potluck_name, date, time, location } = req.body
@@ -28,7 +29,23 @@ const validateItem = (req, res, next) => {
     }
 }
 
-const validateId = async (req, res, next) => {
+const validateUserId = async (req, res, next) => {
+    const { user_id } = req.params
+    try {
+        const user = await Users.getById(user_id)
+        if(user) {
+            req.user = user
+            next()
+        }
+    } catch (error) {
+        next({
+            status: 404,
+            message: "User not found"
+        })
+    }
+}
+
+const validatePlId = async (req, res, next) => {
     const { potluck_id } = req.params
     try {
         const potluck = await Events.getById(potluck_id)
@@ -49,5 +66,6 @@ const validateId = async (req, res, next) => {
 module.exports = {
     validateBody,
     validateItem,
-    validateId
+    validatePlId,
+    validateUserId
 }
