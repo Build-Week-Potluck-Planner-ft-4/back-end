@@ -4,7 +4,8 @@ const {
     validateBody,
     validateItem,
     validatePlId,
-    validateUserId
+    validateUserId,
+    validateGuest
 } = require('../middleware/potluck')
 
 router.post('/create/:user_id', validateUserId, validateBody, async (req, res, next) => {
@@ -34,7 +35,24 @@ router.post('/items/:user_id/:potluck_id', validatePlId, validateItem, async (re
     }
     try {
         const createdItem = await Events.insertItem(newItem)
-        res.status(200).json(createdItem)
+        res.status(201).json(createdItem)
+    } catch (error) {
+        next(error)
+    }
+})
+
+router.post('/guests/:user_id/:potluck_id', validatePlId, validateGuest, async (req, res, next) => {
+    const { user_id } = req.guest
+    const { potluck_id} = req.params
+    const newGuest = {
+        user_id,
+        potluck_id,
+        role: "guest",
+        attending: false
+    }
+    try {
+        const assignGuest = await Events.insertGuest(newGuest)
+        res.status(201).json(assignGuest)
     } catch (error) {
         next(error)
     }
@@ -44,8 +62,6 @@ module.exports = router
 
 
 //[PUT] edit event
-
-//[POST] add food items
 
 //[POST] add user/guests
 

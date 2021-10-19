@@ -8,6 +8,14 @@ async function insertEvent(event) {
     return newEventObject 
 }
 
+async function insertGuest(guest) {
+    const [newGuestObject] = await db('userPotluck')
+        .insert(guest, [
+            'user_id', 'potluck_id', 'role', 'attending'
+        ])
+        return newGuestObject
+}
+
 function getById(id) {
     return db('potluck')
         .where('potluck_id', id)
@@ -25,5 +33,6 @@ async function insertItem(newItem) {
 module.exports = {
     insertEvent,
     getById,
-    insertItem
+    insertItem,
+    insertGuest
 }

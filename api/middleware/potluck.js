@@ -53,7 +53,6 @@ const validatePlId = async (req, res, next) => {
         const potluck = await Events.getById(potluck_id)
         if(potluck) {
             req.potluck = potluck
-            console.log(potluck.user_id, user_id)
             if(potluck.user_id === parseInt(user_id)) {
                 next()
             } else {
@@ -73,9 +72,29 @@ const validatePlId = async (req, res, next) => {
     }
 }
 
+const validateGuest = async (req, res, next) => {
+    const { username } = req.body
+    
+    try {
+        const validUser = await Users.findBy({username: username})
+        if(validUser){
+            req.guest = validUser[0]
+            next()
+        } else {
+            next({
+                status: 404,
+                message: "username is not registered"
+            })
+        }
+    } catch (error) {
+        next(error)
+    }
+}
+
 module.exports = {
     validateBody,
     validateItem,
     validatePlId,
-    validateUserId
+    validateUserId,
+    validateGuest
 }
