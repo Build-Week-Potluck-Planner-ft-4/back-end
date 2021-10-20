@@ -45,15 +45,15 @@ router.put('/edit/:user_id/:potluck_id', validatePlId, validateBody, async (req,
     }
 })
 
-router.post('/items/:user_id/:potluck_id', validatePlId, validateItem, async (req, res, next) => {
-    const { item } = req.body
+router.post('/items/:user_id/:potluck_id', validatePlId,  async (req, res, next) => {
+    const items = req.body
     const { potluck_id } = req.potluck
-    const newItem = {
-        potluck_id,
-        item,
-    }
+    // const newItem = {
+    //     potluck_id,
+    //     item,
+    // }
     try {
-        const createdItem = await Events.insertItem(newItem)
+        const createdItem = await Events.insertItem(potluck_id, items)
         res.status(201).json(createdItem)
     } catch (error) {
         next(error)
@@ -77,7 +77,17 @@ router.post('/guests/:user_id/:potluck_id', validatePlId, validateGuest, async (
     }
 })
 
-
+router.put('/attending/:user_id/:potluck_id', async (req, res, next) => {
+    const rsvp = {
+        attending: req.attending
+    }
+    try {
+        const updateRsvp = await Events.updateGuest(rsvp)
+        res.status(200).json(updateRsvp)
+    } catch (error) {
+        next(error)
+    }
+})
 
 module.exports = router
 

@@ -16,6 +16,15 @@ async function insertGuest(guest) {
         return newGuestObject
 }
 
+async function updateGuest(pId, uId, guest) {
+    await db('userPotluck')
+        .where('potluck_id', Number(pId))
+        .andWhere('user_id', Number(uId))
+        .first()
+        .update(guest)
+    return 
+}
+
 async function updateEvent(id, event) {
     await db('potluck')
         .where('potluck_id', Number(id))
@@ -30,12 +39,12 @@ function getById(id) {
         .first()
 }
 
-async function insertItem(newItem) {
-    const [newItemObject] = await db('potluckItem')
-        .insert(newItem, [
-            'item_id', 'potluck_id', 'item'
-        ])
-        return newItemObject
+async function insertItem(id, newItems) {
+    const newItemsToInsert = newItems.map(item =>
+        ({ 'potluck_id': id, 'item': item }))
+    await db('potluckItem')
+        .insert(newItemsToInsert)
+    return newItemsToInsert
 }
 
 module.exports = {
