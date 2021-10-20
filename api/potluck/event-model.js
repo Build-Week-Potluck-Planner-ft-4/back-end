@@ -16,6 +16,14 @@ async function insertGuest(guest) {
         return newGuestObject
 }
 
+async function updateEvent(id, event) {
+    await db('potluck')
+        .where('potluck_id', Number(id))
+        .first()
+        .update(event)
+    return getById(id)
+}
+
 function getById(id) {
     return db('potluck')
         .where('potluck_id', id)
@@ -34,5 +42,6 @@ module.exports = {
     insertEvent,
     getById,
     insertItem,
-    insertGuest
+    insertGuest,
+    updateEvent
 }

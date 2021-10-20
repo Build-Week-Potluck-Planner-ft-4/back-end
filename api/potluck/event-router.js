@@ -26,6 +26,23 @@ router.post('/create/:user_id', validateUserId, validateBody, async (req, res, n
     }
 })
 
+router.put('/edit/:user_id/:potluck_id', validatePlId, validateBody, async (req, res, next) => {
+    const { potluck_id } = req.potluck
+    const { potluck_name, date, time, location } = req.body
+    const editEvent = {
+        potluck_name,
+        date,
+        time,
+        location
+    }
+    try {
+        const updatedEvent = await Events.updateEvent(potluck_id, editEvent)
+        res.status(200).json(updatedEvent)
+    } catch (error) {
+        next(error)
+    }
+})
+
 router.post('/items/:user_id/:potluck_id', validatePlId, validateItem, async (req, res, next) => {
     const { item } = req.body
     const { potluck_id } = req.potluck
