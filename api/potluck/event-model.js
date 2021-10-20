@@ -77,8 +77,8 @@ async function updateFullfilled(item) {
 }
 
 const findPotlucks = (id) => {
-    return db('userPotluck as u')
-        .join('potluck as p', 'p.user_id', 'u.user_id')
+    return db('potluck as p')
+        .join('userPotluck as u', 'p.potluck_id', 'u.potluck_id')
         .select('u.role', 'u.attending', 'p.potluck_name','p.date', 
             'p.time', 'p.location')
         .where('u.user_id', id)
