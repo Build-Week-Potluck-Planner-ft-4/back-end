@@ -93,10 +93,17 @@ const assignOrganizer = async (req, res, next) => {
         }) .catch(next)
 }
 
+const markAsFullfilled = (req, res, next) => {
+    req.map(item => {
+        const itemObject = { item_id: item.item_id }
+    Events.updateFullfilled(itemObject)})
+}
+
 module.exports = {
     validateBody,
     validatePlId,
     validateUserId,
     validateGuest,
-    assignOrganizer
+    assignOrganizer,
+    markAsFullfilled
 }

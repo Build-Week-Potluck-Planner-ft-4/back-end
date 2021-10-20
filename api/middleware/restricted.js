@@ -1,6 +1,6 @@
 const { JWT_SECRET } = require('../../data/secret/index');
 const jwt = require('jsonwebtoken');
-const { findBy } = require('../auth/auth-model');
+const { findByUser } = require('../auth/auth-model');
 
 const restrict = (req, res, next) => {
   const token = req.headers.authorization
@@ -52,7 +52,7 @@ const validateEmail = (req, res, next) => {
 
 const checkUsernameFree = async(req, res, next) => {
   const { username } = req.body
-  const user = await findBy({ username: username})
+  const user = await findByUser({ username: username})
   if(user.length){
     next({
       status: 422,
@@ -65,7 +65,7 @@ const checkUsernameFree = async(req, res, next) => {
 
 const validateUsername = async(req, res, next) => {
   const { username } = req.body
-  const user = await findBy({ username: username })
+  const user = await findByUser({ username: username })
   if(user.length){
     req.user = user[0]
     next()

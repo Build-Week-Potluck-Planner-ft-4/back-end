@@ -1,4 +1,5 @@
 const db = require('../../data/db-config')
+//const { findByUser } = require('../auth/auth-model')
 
 async function insertEvent(event) {
     const [newEventObject] = await db('potluck')
@@ -17,17 +18,15 @@ async function insertGuest(guest) {
 }
 
 async function updateRsvp(pId, uId, rsvp) {
-    console.log(rsvp);
     await db('userPotluck')
         .where('potluck_id', Number(pId))
         .andWhere('user_id', Number(uId))
         .first()
         .update(rsvp)
-    return findRsvp({potluck_id: Number(pId)})
+    return findBy({potluck_id: Number(pId)}, 'userPotluck')
 }
 
 async function updateEvent(id, event) {
-    
     await db('potluck')
         .where('potluck_id', Number(id))
         .first()
@@ -41,25 +40,49 @@ function getById(id) {
         .first()
 }
 
-async function insertItem(id, newItems) {
+async function insertItems(id, newItems) {
     const newItemsToInsert = newItems.map(item =>
-        ({ 'potluck_id': id, 'item': item }))
-    await db('potluckItem')
-        .insert(newItemsToInsert)
-    return newItemsToInsert
+        ({ 'potluck_id': id, 'item': item.item, 'fulfilled': false }))
+    const addedItems = await db('potluckItem')
+        .insert(newItemsToInsert, [
+            'item_id', 'item', 'fulfilled', 'potluck_id'
+        ])
+    return addedItems
 }
 
-function findRsvp(filter) {
-    return db('userPotluck')
+async function updateItems(pId, uId, items) {
+    const newItemsToAssign = items.map(item => 
+       ({ 'user_id': uId, 'potluck_id': pId, 'item_id': item.item_id }))
+     const assignedItems = await db('userItem')
+        .insert(newItemsToAssign, [
+            'id', 'item_id', 'user_id', 'potluck_id'
+        ])
+        console.log(assignedItems);
+    return assignedItems
+}
+
+function findBy(filter, database) {
+    return db(database)
       .select('attending')
       .where(filter)
+}
+
+async function updateFullfilled(item) {
+    console.log(item);
+        const fullfilled = await db('potluckItem')
+            .where('item_id', Number(item.item_id))
+            .first()
+            .update({ 'fulfilled': true })
+        return fullfilled
 }
 
 module.exports = {
     insertEvent,
     getById,
-    insertItem,
+    insertItems,
     insertGuest,
     updateEvent,
-    updateRsvp
+    updateRsvp,
+    updateItems,
+    updateFullfilled
 }

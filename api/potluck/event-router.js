@@ -6,6 +6,7 @@ const {
     validateUserId,
     validateGuest,
     assignOrganizer,
+    markAsFullfilled
 } = require('../middleware/potluck')
 
 router.post('/create/:user_id', validateUserId, validateBody, async (req, res, next) => {
@@ -48,8 +49,20 @@ router.post('/items/:user_id/:potluck_id', validatePlId, async (req, res, next) 
     const items = req.body
     const { potluck_id } = req.potluck
     try {
-        const createdItem = await Events.insertItem(potluck_id, items)
-        res.status(201).json(createdItem)
+        const createdItems = await Events.insertItems(potluck_id, items)
+        res.status(201).json(createdItems)
+    } catch (error) {
+        next(error)
+    }
+})
+
+router.put('/items/:user_id/:potluck_id', async (req, res, next) => {
+    const items = req.body
+    const { potluck_id, user_id } = req.params
+    try {
+        const assignedItems = await Events.updateItems(potluck_id, user_id, items)
+        markAsFullfilled(assignedItems)
+        res.status(200).json(assignedItems)
     } catch (error) {
         next(error)
     }
@@ -92,8 +105,6 @@ module.exports = router
 
 
 //[PUT] assign food items to user
-
-//[PUT] update attendance boolean
 
 //[GET] fetch potlucks user is assigned to
 
