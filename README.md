@@ -5,6 +5,11 @@ Deployed Link is https://potluckplanner-bw-10-2021.herokuapp.com/
 	- [Logs a User In](#logs-a-user-in)
 	- [Registers a New User](#registers-a-new-user)
 
+- [Potluck](#potluck)
+  - [Logged in User can create a new potluck](#creates-a-potluck)
+  - [Organizer of potluck can add a item](#add-item)
+  - [Organizer of potluck can invite a registered user as a guest](#add-guest)
+
 # Auth
 
 ## Logs a User In
@@ -16,10 +21,10 @@ Deployed Link is https://potluckplanner-bw-10-2021.herokuapp.com/
 
 ### Parameters
 
-| Name    | Type      | Description                          |
-|---------|-----------|--------------------------------------|
-| username			| String			|  <p>Username of the User</p>							|
-| password			| String			|  <p>Password of the User</p>							|
+| Name      | Type      | Description                         |
+|-----------|-----------|-------------------------------------|
+| username	| String		|  <p>Username of the User</p>				|
+| password	| String		|  <p>Password of the User</p>				|
 
 ### Success Response
 
@@ -39,7 +44,8 @@ Username-Or-Password-Incorrect-Response
 
 ```
 {
-     "message": "invalid credentials."
+  "status": 401,
+  "message": "invalid credentials."
 }
 ```
 
@@ -52,11 +58,11 @@ Username-Or-Password-Incorrect-Response
 
 ### Parameters
 
-| Name    | Type      | Description                          |
-|---------|-----------|--------------------------------------|
-| username			| String			|  <p>The New Users username *Required **Must be unique</p>							|
-| password			| String			|  <p>The New Users password *Required</p>							|
-| email			| String			|  <p>The New Users email, *Required **Must be unique</p>							|
+| Name      | Type      | Description                                               |
+|-----------|-----------|-----------------------------------------------------------|
+| username	| String		|  <p>The New Users username *Required **Must be unique</p>	|
+| password	| String		|  <p>The New Users password *Required</p>							    |
+| email			| String		|  <p>The New Users email, *Required **Must be unique</p>		|
 
 
 ### Success Response
@@ -77,7 +83,8 @@ Username-Already-Taken
 
 ```
 {
-     "message": "username taken"
+  "status": 422,
+  "message": "username taken"
 }
 ```
 
@@ -85,58 +92,228 @@ Required Field(s) empty
 
 ```
 {
+    "status": 400,
     "message": "username, email, and password required"
 }
 ```
 
+# Potluck
+
+## Creates a Potluck
+
+<p>Logged in User can create a new potluck</p>
+
+  POST /api/potluck/create/:user_id
+
+### Parameters
+
+| Name          | Type      | Description                           |
+|---------------|-----------|---------------------------------------|
+| potluck_name	| String		|  <p>Name of the event</p>						  |
+| date			    | String		|  <p>date of event {mm-dd-yyy}</p>     |
+| location      | String    |  <p>location of event</p>             |
+| time          | String    |  <p>time of event {hh:mm:ss}</p>      |
+| user_id       | Integer   |  <p>logged in user id {params}</p>    |
+
+### Success Response
+
+Success-Response:
+
+```
+{
+    "potluck_id": 3,
+    "user_id": 4,
+    "potluck_name": "birthday",
+    "location": "our house",
+    "date": "2021-12-20T06:00:00.000Z",
+    "time": "12:30:00"
+}
+
+```
+### Error Response
+
+User not logged in
+
+```
+{
+    "status":401
+    "message": "token invalid"
+}
+```
+
+invalid user id 
+
+```
+{
+  "status": 404,
+  "message": "User not found"
+}
+```
+Required Field(s) empty
+
+```
+{
+    "status": 400,
+    "message": "name, date, time, & location are required"
+}
+```
+## Add item
+
+<p>Allows organizer of potluck to add item(s)</p>
+
+POST /api/potluck/items/:user_id/:potluck_id
+
+### Parameters
+
+| Name        | Type      | Description                           |
+|-------------|-----------|---------------------------------------|
+| item    	  | String		|  <p>Item needed for event</p>				  |
+| user_id 	  | Integer		|  <p>logged in user id {params}</p>		|
+| potluck_id 	| Integer		|  <p>potluck id {params}</p>				    |
+
+## Success Response
+
+Success-Response:
+```
+{
+    "item_id": 6,
+    "potluck_id": 3,
+    "item": "cake"
+}
+```
+
+### Error Response
+
+User not logged in
+
+```
+{
+    "status":401
+    "message": "token invalid"
+}
+```
+
+invalid user id 
+
+```
+{
+  "status": 404,
+  "message": "User not found"
+}
+```
+
+invalid potluck id 
+
+```
+{
+  "status": 404,
+  "message": "Potluck not found"
+}
+```
+
+User does not have correct role
+
+```
+{
+  "status": 401,
+  "message": "user is not organizer of event"
+}
+```
+
+Required Field(s) empty
+
+```
+{
+    "status": 400,
+    "message": "name of item is required"
+}
+```
+
+## Add gues
+
+<p>Allows organizer of potluck to invite guest(s)</p>
+
+POST /api/potluck/guests/:user_id/:potluck_id
+
+### Parameters
+
+| Name        | Type      | Description                           |
+|-------------|-----------|---------------------------------------|
+| username    | String		|  <p>registered username of guest</p>	|
+| user_id 	  | Integer		|  <p>logged in user id {params}</p>		|
+| potluck_id 	| Integer		|  <p>potluck id {params}</p>				    |
+
+## Success Response
+
+Success-Response:
+```
+{
+    "user_id": 2,
+    "potluck_id": 3,
+    "role": "guest",
+    "attending": false
+}
+```
+
+### Error Response
+
+User not logged in
+
+```
+{
+    "status":401
+    "message": "token invalid"
+}
+```
+
+invalid user id 
+
+```
+{
+  "status": 404,
+  "message": "User not found"
+}
+```
+
+invalid potluck id 
+
+```
+{
+  "status": 404,
+  "message": "Potluck not found"
+}
+```
+
+User does not have correct role
+
+```
+{
+  "status": 401,
+  "message": "user is not organizer of event"
+}
+```
+
+Required Field(s) empty
+
+```
+{
+    "status": 400,
+    "message": "name of item is required"
+}
+```
+
+Guest is not a registered user
+
+```
+{
+  "status": 404,
+  "message": "username is not registered"
+}
 
 
 
 
 
-
-
-
-
-
-
-
-# Build Week Scaffolding for Node and PostgreSQL
-
-## Video Tutorial
-
-The following tutorial explains how to set up this project using PostgreSQL and Heroku.
-
-[![Setting up PostgreSQL for Build Week](https://img.youtube.com/vi/kTO_tf4L23I/maxresdefault.jpg)](https://www.youtube.com/watch?v=kTO_tf4L23I)
-
-## Requirements
-
-- [PostgreSQL, pgAdmin 4](https://www.postgresql.org/download/) and [Heroku CLI](https://devcenter.heroku.com/articles/heroku-cli) installed in your local machine.
-- A Heroku app with the [Heroku PostgreSQL Addon](https://devcenter.heroku.com/articles/heroku-postgresql#provisioning-heroku-postgres) added to it.
-- Development and testing databases created with [pgAdmin 4](https://www.pgadmin.org/docs/pgadmin4/4.29/database_dialog.html).
-
-## Starting a New Project
-
-- Create a new repository using this template, and clone it to your local.
-- Create a `.env` file and follow the instructions inside `knexfile.js`.
-- Fix the scripts inside `package.json` to use your Heroku app.
-
-## Scripts
-
-- **start**: Runs the app in production.
-- **server**: Runs the app in development.
-- **migrate**: Migrates the local development database to the latest.
-- **rollback**: Rolls back migrations in the local development database.
-- **seed**: Truncates all tables in the local development database, feel free to add more seed files.
-- **test**: Runs tests.
-- **deploy**: Deploys the main branch to Heroku.
-
-**The following scripts NEED TO BE EDITED before using: replace `YOUR_HEROKU_APP_NAME`**
-
-- **migrateh**: Migrates the Heroku database to the latest.
-- **rollbackh**: Rolls back migrations in the Heroku database.
-- **databaseh**: Interact with the Heroku database from the command line using psql.
-- **seedh**: Runs all seeds in the Heroku database.
 
 ## Hot Tips
 
