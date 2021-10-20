@@ -63,8 +63,6 @@ module.exports = router
 
 //[PUT] edit event
 
-//[POST] add user/guests
-
 //[PUT] assign food items to user
 
 //[GET] fetch potlucks user is assigned to
