@@ -17,18 +17,6 @@ const validateBody = (req, res, next) => {
     }
 }
 
-const validateItem = (req, res, next) => {
-    const { item } = req.body
-    if(item === undefined || typeof item !== 'string' || !item.trim()) {
-        next({
-            status: 400,
-            message: "name of item is required"
-        })
-    } else {
-        next()
-    }
-}
-
 const validateUserId = async (req, res, next) => {
     const { user_id } = req.params
     try {
@@ -107,7 +95,6 @@ const assignOrganizer = async (req, res, next) => {
 
 module.exports = {
     validateBody,
-    validateItem,
     validatePlId,
     validateUserId,
     validateGuest,

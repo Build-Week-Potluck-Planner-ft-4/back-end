@@ -2,11 +2,10 @@ const router = require('express').Router()
 const Events = require('./event-model')
 const {
     validateBody,
-    validateItem,
     validatePlId,
     validateUserId,
     validateGuest,
-    assignOrganizer
+    assignOrganizer,
 } = require('../middleware/potluck')
 
 router.post('/create/:user_id', validateUserId, validateBody, async (req, res, next) => {
@@ -45,13 +44,9 @@ router.put('/edit/:user_id/:potluck_id', validatePlId, validateBody, async (req,
     }
 })
 
-router.post('/items/:user_id/:potluck_id', validatePlId,  async (req, res, next) => {
+router.post('/items/:user_id/:potluck_id', validatePlId, async (req, res, next) => {
     const items = req.body
     const { potluck_id } = req.potluck
-    // const newItem = {
-    //     potluck_id,
-    //     item,
-    // }
     try {
         const createdItem = await Events.insertItem(potluck_id, items)
         res.status(201).json(createdItem)
@@ -78,11 +73,13 @@ router.post('/guests/:user_id/:potluck_id', validatePlId, validateGuest, async (
 })
 
 router.put('/attending/:user_id/:potluck_id', async (req, res, next) => {
-    const rsvp = {
-        attending: req.attending
+    const { attending } = req.body
+    const {potluck_id, user_id} = req.params
+    const editRsvp = {
+        attending
     }
     try {
-        const updateRsvp = await Events.updateGuest(rsvp)
+        const updateRsvp = await Events.updateRsvp(potluck_id, user_id, editRsvp)
         res.status(200).json(updateRsvp)
     } catch (error) {
         next(error)

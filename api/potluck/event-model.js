@@ -16,16 +16,18 @@ async function insertGuest(guest) {
         return newGuestObject
 }
 
-async function updateGuest(pId, uId, guest) {
+async function updateRsvp(pId, uId, rsvp) {
+    console.log(rsvp);
     await db('userPotluck')
         .where('potluck_id', Number(pId))
         .andWhere('user_id', Number(uId))
         .first()
-        .update(guest)
-    return 
+        .update(rsvp)
+    return findRsvp({potluck_id: Number(pId)})
 }
 
 async function updateEvent(id, event) {
+    
     await db('potluck')
         .where('potluck_id', Number(id))
         .first()
@@ -47,10 +49,17 @@ async function insertItem(id, newItems) {
     return newItemsToInsert
 }
 
+function findRsvp(filter) {
+    return db('userPotluck')
+      .select('attending')
+      .where(filter)
+}
+
 module.exports = {
     insertEvent,
     getById,
     insertItem,
     insertGuest,
-    updateEvent
+    updateEvent,
+    updateRsvp
 }
