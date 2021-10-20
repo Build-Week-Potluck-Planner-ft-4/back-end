@@ -76,6 +76,15 @@ async function updateFullfilled(item) {
         return fullfilled
 }
 
+const findPotlucks = (id) => {
+    return db('userPotluck as u')
+        .join('potluck as p', 'p.user_id', 'u.user_id')
+        .select('u.role', 'u.attending', 'p.potluck_name','p.date', 
+            'p.time', 'p.location')
+        .where('u.user_id', id)
+
+}
+
 module.exports = {
     insertEvent,
     getById,
@@ -84,5 +93,6 @@ module.exports = {
     updateEvent,
     updateRsvp,
     updateItems,
-    updateFullfilled
+    updateFullfilled,
+    findPotlucks
 }

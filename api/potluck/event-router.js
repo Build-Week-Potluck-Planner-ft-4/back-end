@@ -99,12 +99,19 @@ router.put('/attending/:user_id/:potluck_id', async (req, res, next) => {
     }
 })
 
+router.get('/:user_id', validateUserId, async (req, res, next) => {
+    const { user_id } = req.user
+    const potlucks = await Events.findPotlucks(user_id)
+    res.status(200).json(potlucks)
+
+})
+
 module.exports = router
 
 
 
 
-//[PUT] assign food items to user
+
 
 //[GET] fetch potlucks user is assigned to
 
