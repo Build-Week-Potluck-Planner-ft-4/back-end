@@ -91,10 +91,25 @@ const validateGuest = async (req, res, next) => {
     }
 }
 
+const assignOrganizer = async (req, res, next) => {
+    const { potluck_id, user_id } = req
+        const newOrganizer = {
+            user_id,
+            potluck_id,
+            role: "organizer",
+            attending: true
+        }
+        Events.insertGuest(newOrganizer)
+        .then(assignOrganizer => {
+            return assignOrganizer
+        }) .catch(next)
+}
+
 module.exports = {
     validateBody,
     validateItem,
     validatePlId,
     validateUserId,
-    validateGuest
+    validateGuest,
+    assignOrganizer
 }
