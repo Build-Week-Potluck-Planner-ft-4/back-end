@@ -82,7 +82,33 @@ const findPotlucks = (id) => {
         .select('u.role', 'u.attending', 'p.potluck_name','p.date', 
             'p.time', 'p.location')
         .where('u.user_id', id)
+}
 
+// const findPotluckDetails = (id) => {
+//     return db('potluck as p')
+//         .join('potluckItem as i', 'p.potluck_id', 'i.potluck_id')
+//         .join('userPotluck as u', 'p.potluck_id', 'u.potluck_id')
+//         .join('users', 'users.user_id', 'u.user_id')
+//         .select('p.potluck_name','p.date', 
+//         'p.time', 'p.location', 'users.username', 'u.attending',
+//         'u.role', 'i.item', 'i.fulfilled')
+//         .where('p.potluck_id', id)
+//         //.first()
+// }
+
+const findPotluckGuests = (id) => {
+    return db('potluck as p')
+        .join('userPotluck as u', 'p.potluck_id', 'u.potluck_id')
+        .join('users', 'users.user_id', 'u.user_id')
+        .select('users.username', 'u.attending','u.role')
+        .where('p.potluck_id', id)
+}
+
+const findPotluckItems = (id) => {
+    return db('potluck as p')
+        .join('potluckItem as i', 'p.potluck_id', 'i.potluck_id')
+        .select('i.item', 'i.fulfilled')
+        .where('p.potluck_id', id)
 }
 
 module.exports = {
@@ -94,5 +120,7 @@ module.exports = {
     updateRsvp,
     updateItems,
     updateFullfilled,
-    findPotlucks
+    findPotlucks,
+    findPotluckGuests,
+    findPotluckItems
 }

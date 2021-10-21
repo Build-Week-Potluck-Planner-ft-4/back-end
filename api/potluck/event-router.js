@@ -101,9 +101,32 @@ router.put('/attending/:user_id/:potluck_id', async (req, res, next) => {
 
 router.get('/:user_id', validateUserId, async (req, res, next) => {
     const { user_id } = req.user
-    const potlucks = await Events.findPotlucks(user_id)
-    res.status(200).json(potlucks)
+    try {
+        const potlucks = await Events.findPotlucks(user_id)
+        res.status(200).json(potlucks)
+    } catch (error) {
+        next(error)
+    }
+})
 
+router.get('/guests/:user_id/:potluck_id', validateUserId, async (req, res, next) => {
+    const { potluck_id } = req.params
+    try {
+        const query = await Events.findPotluckGuests(potluck_id)
+        res.status(200).json(query)
+    } catch (error) {
+        next(error)
+    }
+})
+
+router.get('/items/:user_id/:potluck_id', validateUserId, async (req, res, next) => {
+    const { potluck_id } = req.params
+    try {
+        const potluckItems = await Events.findPotluckItems(potluck_id)
+        res.status(200).json(potluckItems)
+    } catch (error) {
+        next(error)
+    }
 })
 
 module.exports = router
@@ -113,7 +136,7 @@ module.exports = router
 
 
 
-//[GET] fetch potlucks user is assigned to
+
 
 //[GET] fetch potluck by filter potluck name to see potluck details
 
