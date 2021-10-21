@@ -7,8 +7,12 @@ Deployed Link is https://potluckplanner-bw-10-2021.herokuapp.com/
 
 - [Potluck](#potluck)
   - [Logged in User can create a new potluck](#creates-a-potluck)
-  - [Organizer of potluck can add a item](#add-item)
-  - [Organizer of potluck can invite a registered user as a guest](#add-guest)
+  - [Organizer of potluck can add a item](#create-item)
+  - [Organizer of potluck can invite a registered user as a guest](#create-guest)
+  - [Organizer of potluck can edit the details of the event](#update-event)
+  - [Invited guests can rsvp to the potluck](#update-rsvp)
+  - [Invited guests can view potluck items & select item(s)](#update-item)
+  - [Guests can view all potlucks they've created/invited to](#read-potlucks)
 
 # Auth
 
@@ -157,9 +161,9 @@ Required Field(s) empty
     "message": "name, date, time, & location are required"
 }
 ```
-## Add item
+## Create item(s)
 
-<p>Allows organizer of potluck to add item(s)</p>
+<p>Allows organizer of potluck to add an array of item objects</p>
 
 POST /api/potluck/items/:user_id/:potluck_id
 
@@ -175,11 +179,11 @@ POST /api/potluck/items/:user_id/:potluck_id
 
 Success-Response:
 ```
-{
+[{
     "item_id": 6,
     "potluck_id": 3,
     "item": "cake"
-}
+}]
 ```
 
 ### Error Response
@@ -229,7 +233,7 @@ Required Field(s) empty
 }
 ```
 
-## Add gues
+## Create guest
 
 <p>Allows organizer of potluck to invite guest(s)</p>
 
@@ -309,7 +313,128 @@ Guest is not a registered user
   "status": 404,
   "message": "username is not registered"
 }
+```
+## Updates event
 
+<p>Allows organizer of potluck to edit details</p>
+
+PUT /api/potluck/edit/:user_id/:potluck_id
+
+### Parameters
+
+| Name          | Type      | Description                           |
+|---------------|-----------|---------------------------------------|
+| potluck_id    | String    |  <p>potluck selected {params}</p>
+| potluck_name	| String		|  <p>Name of the event</p>						  |
+| date			    | String		|  <p>date of event {mm-dd-yyy}</p>     |
+| location      | String    |  <p>location of event</p>             |
+| time          | String    |  <p>time of event {hh:mm:ss}</p>      |
+| user_id       | Integer   |  <p>logged in user id {params}</p>    |
+
+## Success Response
+
+Success-Response:
+```
+{
+    "potluck_id": 3,
+    "user_id": 4,
+    "potluck_name": "birthday",
+    "location": "the park",
+    "date": "2021-12-20T06:00:00.000Z",
+    "time": "2:30:00"
+}
+
+```
+
+### Error Response
+
+
+
+## Updates RSVP
+
+<p>Allows invited guest of potluck to change rsvp</p>
+
+PUT /api/potluck/guests/:user_id/:potluck_id
+
+### Parameters
+
+| Name        | Type      | Description                           |
+|-------------|-----------|---------------------------------------|
+| Attending   | Boolean		|  <p>value of rsvp status</p>	        |
+| user_id 	  | Integer		|  <p>logged in user id {params}</p>		|
+| potluck_id 	| Integer		|  <p>potluck id {params}</p>				    |
+
+## Success Response
+
+Success-Response:
+```
+{
+    "user_id": 2,
+    "potluck_id": 3,
+    "role": "guest",
+    "attending": true
+}
+
+```
+
+### Error Response
+
+## Updates Items
+
+<p>Allows invited guest of potluck to select items</p>
+
+PUT /api/potluck/items/:user_id/:potluck_id
+
+### Parameters
+
+| Name        | Type      | Description                           |
+|-------------|-----------|---------------------------------------|
+| item_id     | Integer		|  <p>selected value's id</p> 	        |
+| user_id 	  | Integer		|  <p>logged in user id {params}</p>		|
+| potluck_id 	| Integer		|  <p>potluck id {params}</p>				    |
+| item        | String       <p>name of requested item</p>        |
+
+## Success Response
+
+Success-Response:
+```
+[{
+    "item_id": 2,
+    "item": "cake"
+}]
+
+```
+
+### Error Response
+
+## Reads Potlucks
+
+<p>Allows users to view all potlucks they are invited to</p>
+
+GET /api/potluck/:user_id/
+
+### Parameters
+
+| Name        | Type      | Description                           |
+|-------------|-----------|---------------------------------------|
+| user_id 	  | Integer		|  <p>logged in user id {params}</p>		|
+
+## Success Response
+
+Success-Response:
+```
+[{
+        "potluck_name": "Birthday",
+        "date": "2021-01-01T06:00:00.000Z",
+        "time": "10:30:00",
+        "location": "Beach",
+        "attending": false,
+        "role": "guest"
+    }]
+
+```
+
+### Error Response
 
 
 
