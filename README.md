@@ -161,7 +161,7 @@ Required Field(s) empty
     "message": "name, date, time, & location are required"
 }
 ```
-## Create item(s)
+## Create item
 
 <p>Allows organizer of potluck to add an array of item objects</p>
 
@@ -314,7 +314,7 @@ Guest is not a registered user
   "message": "username is not registered"
 }
 ```
-## Updates event
+## Update event
 
 <p>Allows organizer of potluck to edit details</p>
 
@@ -350,7 +350,7 @@ Success-Response:
 
 
 
-## Updates RSVP
+## Update RSVP
 
 <p>Allows invited guest of potluck to change rsvp</p>
 
@@ -379,7 +379,7 @@ Success-Response:
 
 ### Error Response
 
-## Updates Items
+## Update Item
 
 <p>Allows invited guest of potluck to select items</p>
 
@@ -407,7 +407,7 @@ Success-Response:
 
 ### Error Response
 
-## Reads Potlucks
+## Read Potlucks
 
 <p>Allows users to view all potlucks they are invited to</p>
 
