@@ -64,7 +64,7 @@ const validateGuest = async (req, res, next) => {
     const { username } = req.body
     
     try {
-        const validUser = await Users.findBy({username: username})
+        const validUser = await Users.findByUser({username: username})
         if(validUser){
             req.guest = validUser[0]
             next()
