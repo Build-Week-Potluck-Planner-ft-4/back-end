@@ -80,7 +80,7 @@ const findPotlucks = (id) => {
     return db('potluck as p')
         .join('userPotluck as u', 'p.potluck_id', 'u.potluck_id')
         .select('u.role', 'u.attending', 'p.potluck_name','p.date', 
-            'p.time', 'p.location', 'p.user_id as organizer')
+            'p.time', 'p.location', 'p.user_id as organizer', 'p.potluck_id')
         .where('u.user_id', id)
 }
 
