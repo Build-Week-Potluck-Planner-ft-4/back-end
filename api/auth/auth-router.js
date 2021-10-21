@@ -29,6 +29,7 @@ router.post('/login', validateBody, validateUsername, async (req, res, next) => 
         res.json({
             status: 200,
             message: `welcome, ${req.user.username}`,
+            user_id: req.user.user_id,
             token: token
         })
     } else {
